@@ -1,6 +1,6 @@
 # Red Panda Challenge
 
-Installation with Docker:
+## Installation
 
 ```bash
 git clone git@github.com:red-panda-industries/red-panda-challenge.git
@@ -13,6 +13,8 @@ cp .env.example .env
 editor .env
 ```
 
+### With Docker (recommended)
+
 Build the Red Panda Challenge Docker container:
 ```bash
 docker build . -t red-panda-challenge
@@ -20,5 +22,19 @@ docker build . -t red-panda-challenge
 
 Run the Red Panda Challenge Docker container:
 ```bash
-docker run --rm -it -v ./db:/app/db -v ./log:/app/log red-panda-challenge
+docker run --rm -it -v $(pwd)/db:/app/db -v $(pwd)/log:/app/log red-panda-challenge
+```
+
+### Without Docker
+
+With Ruby 3.3.1 installed:
+
+Install Ruby dependencies:
+```bash
+bundle install
+```
+
+Run the program:
+```
+bundle exec ruby app.rb
 ```

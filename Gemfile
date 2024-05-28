@@ -1,3 +1,5 @@
+ruby '3.3.1'
+
 source 'https://rubygems.org'
 
 gem 'discordrb', '~> 3.5.0'

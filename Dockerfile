@@ -1,4 +1,7 @@
-FROM ruby:3.3.1
+FROM ruby:3.3.1-alpine
+
+# install libffi-dev for ffi gem
+RUN apk add --no-cache build-base libffi-dev
 
 # throw errors if Gemfile has been modified since Gemfile.lock
 RUN bundle config --global frozen 1
@@ -10,4 +13,4 @@ RUN bundle install
 
 COPY . .
 
-CMD ["ruby", "--enable-frozen-string-literal", "app.rb"]
+CMD ["ruby", "app.rb"]
