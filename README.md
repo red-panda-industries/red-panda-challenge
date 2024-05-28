@@ -3,8 +3,8 @@
 Installation with Docker:
 
 ```bash
-cd red-panda-challenge
 git clone git@github.com:red-panda-industries/red-panda-challenge.git
+cd red-panda-challenge
 ```
 
 Then, add Discord credentials to `.env`:
