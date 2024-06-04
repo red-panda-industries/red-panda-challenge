@@ -7,7 +7,7 @@ git clone git@github.com:red-panda-industries/red-panda-challenge.git
 cd red-panda-challenge
 ```
 
-Then, add Discord credentials to `.env`:
+Then, update `.env` with your Discord API credentials:
 ```bash
 cp .env.example .env
 editor .env
