@@ -1,9 +1,9 @@
 FROM ruby:3.3.1-alpine
 
-# install libffi-dev for ffi gem
+# Install `libffi-dev` for `ffi` gem needed by `discordrb`
 RUN apk add --no-cache build-base libffi-dev
 
-# throw errors if Gemfile has been modified since Gemfile.lock
+# Throw errors if `Gemfile` has been modified since `Gemfile.lock`
 RUN bundle config --global frozen 1
 
 WORKDIR /app
