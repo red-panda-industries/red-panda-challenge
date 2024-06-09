@@ -24,7 +24,7 @@ Run the Red Panda Challenge Docker container:
 ```bash
 RED_PANDA_CHALLENGE_DB_DIR="$(pwd)/db"
 RED_PANDA_CHALLENGE_LOG_DIR="$(pwd)/log"
-docker run --rm -it -v $RED_PANDA_CHALLENGE_DB_DIR:/app/db" -v "$RED_PANDA_CHALLENGE_LOG_DIR:/app/log" red-panda-challenge
+docker run --rm -it -v "$RED_PANDA_CHALLENGE_DB_DIR:/app/db" -v "$RED_PANDA_CHALLENGE_LOG_DIR:/app/log" red-panda-challenge
 ```
 
 ### Without Docker
