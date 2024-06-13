@@ -17,12 +17,22 @@ editor .env
 
 Build the Red Panda Challenge Docker container:
 ```bash
-docker build . -t red-panda-challenge
+docker build . -t red-panda-challenge:latest
+```
+
+or with Ruby and Rake installed on your host system:
+```bash
+rake build
 ```
 
 Run the Red Panda Challenge Docker container:
 ```bash
-docker run --rm -it -v ./db:/app/db -v ./log:/app/log red-panda-challenge
+docker run --rm -it -v ./db:/app/db -v ./log:/app/log red-panda-challenge:latest
+```
+
+or with Rake:
+```bash
+rake run
 ```
 
 ### Without Docker
