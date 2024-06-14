@@ -6,35 +6,46 @@ require 'pry'
 require 'sqlite3'
 require 'yaml'
 
+################################################################
+
 ENVIRONMENT = ENV['RAILS_ENV'].presence || 'development'
 
 DB_CONFIG_PATH = File.join(__dir__, 'config/database.yml')
 
 DATABASE_CONFIG = YAML.load_file(DB_CONFIG_PATH)[ENVIRONMENT]
-fail "Database configuration for '#{ENVIRONMENT}' not found in '#{DB_CONFIG_PATH}'" if DATABASE_CONFIG.blank?
+abort "Database configuration for '#{ENVIRONMENT}' not found in '#{DB_CONFIG_PATH}'" if DATABASE_CONFIG.blank?
 
 DISCORD_BOT_TOKEN = ENV['DISCORD_BOT_TOKEN']
-fail 'The environment variable DISCORD_BOT_TOKEN is not set' if DISCORD_BOT_TOKEN.blank?
+abort 'The environment variable DISCORD_BOT_TOKEN is not set' if DISCORD_BOT_TOKEN.blank?
 
 $logger = Logger.new($stdout)
-$logger.info 'Red Panda Challenge bot is starting...'
 
 ################################################################
 
+ActiveRecord::Base.logger = $logger
 ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
 
 at_exit do
   ActiveRecord::Base.connection.close
 end
 
-class User < ActiveRecord::Base
-  def self.from_discord_event(event)
-    discord_id = event.user.id
-    User.find_by(discord_id:) || User.create(discord_id:, username: event.user.name, count: 0)
-  end
+unless ActiveRecord::Base.connection.table_exists?('schema_migrations')
+  abort "The database file does not exist. Run 'rake db:setup' to set up the database"
+end
+
+if ActiveRecord::Base.connection.migration_context.needs_migration?
+  abort "You have database migrations that need to be run. Run 'rake db:migrate' to update the database schema."
+end
+
+# Autoload models from the app/models directory
+
+Dir[File.join(__dir__, 'app/models', '*.rb')].each do |file|
+  require file
 end
 
 ################################################################
+
+$logger.info 'Red Panda Challenge bot is starting...'
 
 bot = Discordrb::Commands::CommandBot.new(
   token:    DISCORD_BOT_TOKEN,
@@ -65,5 +76,7 @@ bot.command('count') do |event|
 
   event << "You have used this command #{user.count} times now."
 end
+
+################################################################
 
 bot.run()

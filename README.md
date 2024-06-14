@@ -19,6 +19,11 @@ Build the Red Panda Challenge Docker container:
 docker build . -t 'red-panda-industries/rpc:latest'
 ```
 
+Set up the database:
+```bash
+docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/sh' 'red-panda-industries/rpc:latest' -c 'rake db:setup'
+```
+
 Run the Red Panda Challenge Docker container:
 ```bash
 docker run --rm -it -v './var':'/app/var' 'red-panda-industries/rpc:latest'
@@ -41,6 +46,11 @@ sudo apt-get install -y build-essential libffi-dev libsqlite3-dev
 Install Ruby dependencies:
 ```bash
 bundle install
+```
+
+Set up the database:
+```bash
+bundle exec rake db:setup
 ```
 
 Run the program:
