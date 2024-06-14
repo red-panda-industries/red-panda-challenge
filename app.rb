@@ -8,21 +8,22 @@ require 'yaml'
 
 ################################################################
 
-ENVIRONMENT = ENV['RAILS_ENV'].presence || 'development'
+ENVIRONMENT_NAME = ENV['RAILS_ENV'].presence || 'development'
 
 DB_CONFIG_PATH = File.join(__dir__, 'config/database.yml')
 
-DATABASE_CONFIG = YAML.load_file(DB_CONFIG_PATH)[ENVIRONMENT]
-abort "Database configuration for '#{ENVIRONMENT}' not found in '#{DB_CONFIG_PATH}'" if DATABASE_CONFIG.blank?
+DATABASE_CONFIG = YAML.load_file(DB_CONFIG_PATH)[ENVIRONMENT_NAME]
+if DATABASE_CONFIG.blank?
+  abort "Database configuration for '#{ENVIRONMENT_NAME}' not found in '#{DB_CONFIG_PATH}'"
+end
 
 DISCORD_BOT_TOKEN = ENV['DISCORD_BOT_TOKEN']
-abort 'The environment variable DISCORD_BOT_TOKEN is not set' if DISCORD_BOT_TOKEN.blank?
-
-$logger = Logger.new($stdout)
+if DISCORD_BOT_TOKEN.blank?
+  abort 'The environment variable DISCORD_BOT_TOKEN is not set'
+end
 
 ################################################################
 
-ActiveRecord::Base.logger = $logger
 ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
 
 at_exit do
@@ -30,11 +31,11 @@ at_exit do
 end
 
 unless ActiveRecord::Base.connection.table_exists?('schema_migrations')
-  abort "The database file does not exist. Run 'rake db:setup' to set up the database"
+  abort 'The database file does not exist. Run "rake db:setup" to set up the database'
 end
 
 if ActiveRecord::Base.connection.migration_context.needs_migration?
-  abort "You have database migrations that need to be run. Run 'rake db:migrate' to update the database schema."
+  abort 'You have database migrations that need to be run. Run "rake db:migrate" to update the database schema.'
 end
 
 # Autoload models from the app/models directory
@@ -45,7 +46,8 @@ end
 
 ################################################################
 
-$logger.info 'Red Panda Challenge bot is starting...'
+logger = Logger.new($stdout)
+logger.info 'Red Panda Challenge bot is starting...'
 
 bot = Discordrb::Commands::CommandBot.new(
   token:    DISCORD_BOT_TOKEN,
@@ -53,8 +55,8 @@ bot = Discordrb::Commands::CommandBot.new(
   prefix:   '!',
 )
 
-$logger.info 'Red Panda Challenge bot is running.'
-$logger.info "This bot's invite URL is #{bot.invite_url}"
+logger.info 'Red Panda Challenge bot is running.'
+logger.info "This bot's invite URL is #{bot.invite_url}"
 
 ################################################################
 
@@ -69,7 +71,7 @@ end
 bot.command('count') do |event|
   user = User.from_discord_event(event)
   
-  $logger.info "User #{user} used the count command."
+  logger.info "User #{user} used the count command."
 
   user.count += 1
   user.save!

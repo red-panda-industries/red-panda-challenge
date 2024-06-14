@@ -1,5 +1,11 @@
 # Red Panda Challenge
 
+## Commands
+
+- `Ping!` - displays 'Pong!'
+- `!user` - displays your username and user id
+- `!count` - increments a counter for your user
+
 ## Installing the program
 
 ```bash
@@ -29,7 +35,7 @@ Run the Red Panda Challenge Docker container:
 docker run --rm -it -v './var':'/app/var' 'red-panda-industries/rpc:latest'
 ```
 
-Show the Rake tasks:
+(For development) Show the Rake tasks:
 ```bash
 docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/sh' 'red-panda-industries/rpc:latest' -c 'rake --tasks'
 ```
