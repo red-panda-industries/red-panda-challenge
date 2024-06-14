@@ -1,7 +1,7 @@
-FROM ruby:3.3.1-alpine
+FROM ruby:3.3.1-slim
 
-# Install packages needed by `discordrb`
-RUN apk add --no-cache build-base libffi-dev
+# Install packages needed by gems
+RUN apt-get update && apt-get install -y build-essential libffi-dev libsqlite3-dev
 
 # Throw errors if `Gemfile` has been modified since `Gemfile.lock`
 RUN bundle config --global frozen 1

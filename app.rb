@@ -1,22 +1,49 @@
+require 'active_record'
+require 'active_support'
 require 'discordrb'
 require 'dotenv/load'
 require 'pry'
 require 'sqlite3'
+require 'yaml'
 
-DISCORD_BOT_TOKEN = ENV['DISCORD_BOT_TOKEN'].to_s.strip
-fail 'The environment variable DISCORD_BOT_TOKEN is not set' if DISCORD_BOT_TOKEN.empty?
+ENVIRONMENT = ENV['RAILS_ENV'].presence || 'development'
 
-logger = Logger.new($stdout)
-logger.info 'Red Panda Challenge bot is starting...'
+DB_CONFIG_PATH = File.join(__dir__, 'config/database.yml')
+
+DATABASE_CONFIG = YAML.load_file(DB_CONFIG_PATH)[ENVIRONMENT]
+fail "Database configuration for '#{ENVIRONMENT}' not found in '#{DB_CONFIG_PATH}'" if DATABASE_CONFIG.blank?
+
+DISCORD_BOT_TOKEN = ENV['DISCORD_BOT_TOKEN']
+fail 'The environment variable DISCORD_BOT_TOKEN is not set' if DISCORD_BOT_TOKEN.blank?
+
+$logger = Logger.new($stdout)
+$logger.info 'Red Panda Challenge bot is starting...'
+
+################################################################
+
+ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
+
+at_exit do
+  ActiveRecord::Base.connection.close
+end
+
+class User < ActiveRecord::Base
+  def self.from_discord_event(event)
+    discord_id = event.user.id
+    User.find_by(discord_id:) || User.create(discord_id:, username: event.user.name, count: 0)
+  end
+end
+
+################################################################
 
 bot = Discordrb::Commands::CommandBot.new(
   token:    DISCORD_BOT_TOKEN,
-  intents:  [:server_messages, :server_message_reactions],
+  intents:  %i(server_messages server_message_reactions),
   prefix:   '!',
 )
 
-logger.info 'Red Panda Challenge bot is running.'
-logger.info "This bot's invite URL is #{bot.invite_url}"
+$logger.info 'Red Panda Challenge bot is running.'
+$logger.info "This bot's invite URL is #{bot.invite_url}"
 
 ################################################################
 
@@ -28,13 +55,15 @@ bot.command('user') do |event|
   event << "Your username is #{event.user.name}, and your ID is #{event.user.id}"
 end
 
-@counts = {}
-
 bot.command('count') do |event|
-  user_id = event.user.id
-  @counts[user_id] ||= 0
-  @counts[user_id] += 1
-  event << "You have used this command #{@counts[user_id]} times now."
+  user = User.from_discord_event(event)
+  
+  $logger.info "User #{user} used the count command."
+
+  user.count += 1
+  user.save!
+
+  event << "You have used this command #{user.count} times now."
 end
 
 bot.run()
