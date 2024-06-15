@@ -24,6 +24,7 @@ end
 
 ################################################################
 
+ActiveRecord::Base.logger = Logger.new($stdout)
 ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
 
 at_exit do
@@ -61,21 +62,27 @@ logger.info "This bot's invite URL is #{bot.invite_url}"
 ################################################################
 
 bot.message(content: 'Ping!') do |event|
+  user = User.from_discord_event(event)
+
+  logger.info "Ping! command used by #{user.username} (#{user.discord_id})"
   event << 'Pong!'
 end
 
-bot.command('user') do |event|
-  event << "Your username is #{event.user.name}, and your ID is #{event.user.id}"
+bot.command(:user) do |event|
+  user = User.from_discord_event(event)
+
+  logger.info "!user command used by #{user.username} (#{user.discord_id})"
+  event << "Your username is #{user.username} and your Discord ID is #{user.discord_id}."
+  event << "Your count is #{user.count}. Your created at is #{user.created_at}. Your updated at is #{user.updated_at}."
 end
 
-bot.command('count') do |event|
+bot.command(:count) do |event|
   user = User.from_discord_event(event)
   
-  logger.info "User #{user} used the count command."
-
   user.count += 1
   user.save!
 
+  logger.info "!count command used by #{user.username} (#{user.discord_id}) - count: #{user.count}"
   event << "You have used this command #{user.count} times now."
 end
 
