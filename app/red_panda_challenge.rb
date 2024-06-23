@@ -11,5 +11,6 @@ def autoload_directory(*relative_path_parts)
 end
 
 autoload_directory '..', 'initializers'
+autoload_directory 'helpers'
 autoload_directory 'models'
 autoload_directory 'bots'

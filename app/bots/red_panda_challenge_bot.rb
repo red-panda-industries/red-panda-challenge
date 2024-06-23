@@ -1,18 +1,20 @@
 class RedPandaChallengeBot < ApplicationBot
+  include RedPandaChallengeBotHelper
+  
   COMMAND_HANDLERS = {
-    user:     :handle_user_info!,
-    count:    :handle_count!,
-    michelle: :handle_michelle!,
+    user:     :handle_user_command!,
+    count:    :handle_count_command!,
+    michelle: :handle_michelle_command!,
   }
 
-  def handle_user_info!(event)
+  def handle_user_command!(event)
     user = User.from_discord_event(event)
 
     event << "Your username is #{user.username} and your Discord ID is #{user.discord_id}."
     event << "Your count is #{user.count}. Your created at is #{user.created_at}. Your updated at is #{user.updated_at}."
   end
 
-  def handle_count!(event)
+  def handle_count_command!(event)
     user = User.from_discord_event(event)
 
     user.count += 1
@@ -21,7 +23,7 @@ class RedPandaChallengeBot < ApplicationBot
     event << "You have used this command #{user.count} times now."
   end
 
-  def handle_michelle!(event)
+  def handle_michelle_command!(event)
     user = User.from_discord_event(event)
 
     if user.has_completed_michelle_obama_challenge_today?
@@ -32,27 +34,6 @@ class RedPandaChallengeBot < ApplicationBot
     end
 
     display_michelle_obama_challenge_stats!(user:, event:)
-  end
-
-  def display_michelle_obama_challenge_stats!(user:, event:)
-    challenge_entries = user.michelle_obama_challenge_entries
-
-    event << "You have completed the Michelle Obama challenge #{challenge_entries.size} times."
-    event << 'This week:'
-
-    date_range = (Date.today - 7) .. (Date.today)
-
-    date_range.each do |date|
-      formatted_date = date.strftime('%m-%d %a')
-      challenge_was_completed = challenge_entries.any? { |entry| entry.date == date }
-      
-      if challenge_was_completed
-        event << "- #{formatted_date} ✔️"
-      else
-        event << "- #{formatted_date}"
-      end
-    end
-    
     event << 'Keep up the good work! - Michelle Obama'
   end
 end
