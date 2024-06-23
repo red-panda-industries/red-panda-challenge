@@ -9,7 +9,7 @@ class User < ActiveRecord::Base
     MichelleObamaChallengeEntry.exists?(user: self, date: Date.today)
   end
 
-  def complete_michelle_obama_challenge!
+  def complete_michelle_obama_challenge_for_today!
     MichelleObamaChallengeEntry.create!(user: self, date: Date.today)
   end
 
