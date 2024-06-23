@@ -31,13 +31,26 @@ class RedPandaChallengeBot < ApplicationBot
       event << 'You have completed the Michelle Obama challenge for today!'
     end
 
+    display_michelle_obama_challenge_stats!(user:, event:)
+  end
+
+  def display_michelle_obama_challenge_stats!(user:, event:)
     challenge_entries = user.michelle_obama_challenge_entries
 
     event << "You have completed the Michelle Obama challenge #{challenge_entries.size} times."
-    event << 'Here are the dates you have completed the challenge:'
+    event << 'This week:'
 
-    challenge_entries.each do |entry|
-      event << "- #{entry.date}"
+    date_range = (Date.today - 7) .. (Date.today)
+
+    date_range.each do |date|
+      formatted_date = date.strftime('%m-%d %a')
+      challenge_was_completed = challenge_entries.any? { |entry| entry.date == date }
+      
+      if challenge_was_completed
+        event << "- #{formatted_date} ✔️"
+      else
+        event << "- #{formatted_date}"
+      end
     end
     
     event << 'Keep up the good work! - Michelle Obama'
