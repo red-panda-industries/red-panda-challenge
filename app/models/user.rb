@@ -6,11 +6,11 @@ class User < ActiveRecord::Base
   validates :count, presence: true, numericality: { greater_than_or_equal_to: 0 }
 
   def has_completed_michelle_obama_challenge_today?
-    michelle_obama_challenge_entries.where(date: Date.today).exists?
+    MichelleObamaChallengeEntry.exists?(user: self, date: Date.today)
   end
 
   def complete_michelle_obama_challenge!
-    michelle_obama_challenge_entries.create!(date: Date.today)
+    MichelleObamaChallengeEntry.create!(user: self, date: Date.today)
   end
 
   # @param [Discordrb::Events::MessageEvent] event
