@@ -5,6 +5,7 @@
 - `Ping!` - displays 'Pong!'
 - `!user` - displays your username and user id
 - `!count` - increments a counter for your user
+- `!michelle` - registers a daily entry for the Michelle Obama challenge
 
 ## Installing the program
 

@@ -48,6 +48,14 @@ end
 ################################################################
 
 logger = Logger.new($stdout)
+
+# @param [Discordrb::Events::MessageEvent] event
+def logger.event(event)
+  self.info "#{event.user.name} (#{event.user.id}): #{event.message.content}"
+end
+
+################################################################
+
 logger.info 'Red Panda Challenge bot is starting...'
 
 bot = Discordrb::Commands::CommandBot.new(
@@ -62,28 +70,42 @@ logger.info "This bot's invite URL is #{bot.invite_url}"
 ################################################################
 
 bot.message(content: 'Ping!') do |event|
+  logger.event(event)
   user = User.from_discord_event(event)
 
-  logger.info "Ping! command used by #{user.username} (#{user.discord_id})"
   event << 'Pong!'
 end
 
 bot.command(:user) do |event|
+  logger.event(event)
   user = User.from_discord_event(event)
 
-  logger.info "!user command used by #{user.username} (#{user.discord_id})"
   event << "Your username is #{user.username} and your Discord ID is #{user.discord_id}."
   event << "Your count is #{user.count}. Your created at is #{user.created_at}. Your updated at is #{user.updated_at}."
 end
 
 bot.command(:count) do |event|
+  logger.event(event)
   user = User.from_discord_event(event)
   
   user.count += 1
   user.save!
 
-  logger.info "!count command used by #{user.username} (#{user.discord_id}) - count: #{user.count}"
   event << "You have used this command #{user.count} times now."
+end
+
+bot.command(:michelle) do |event|
+  logger.event(event)
+  user = User.from_discord_event(event)
+
+  if user.has_completed_michelle_obama_challenge_today?
+    event << 'You have already completed the Michelle Obama challenge today.'
+  else
+    user.complete_michelle_obama_challenge!
+    event << 'You have completed the Michelle Obama challenge for today!'
+  end
+
+  event << "You have completed the Michelle Obama challenge #{user.michelle_obama_challenge_entries.count} times."
 end
 
 ################################################################
