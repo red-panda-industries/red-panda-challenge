@@ -16,4 +16,6 @@ COPY . .
 # Suppress warning message about missing `libsodium` used for voice support
 ENV DISCORDRB_NONACL=true
 
-CMD ["ruby", "app.rb"]
+ENV DISCORDRB_FANCY_LOG=true
+
+CMD ["ruby", "bin/server.rb"]
