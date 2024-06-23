@@ -22,7 +22,7 @@ Docker is required.
 
 Build the Red Panda Challenge Docker container:
 ```bash
-docker build . -t 'red-panda-industries/rpc:latest'
+docker buildx build . -t 'red-panda-industries/rpc:latest'
 ```
 
 Set up the database:
