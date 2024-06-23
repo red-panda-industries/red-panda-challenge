@@ -8,24 +8,41 @@ require 'yaml'
 
 ################################################################
 
-ENVIRONMENT_NAME = ENV['RAILS_ENV'].presence || 'development'
+module Environment
+  DEFAULT_ENVIRONMENT_NAME = 'development'
+  ENVIRONMENT_NAME = ENV.fetch('RAILS_ENV', DEFAULT_ENVIRONMENT_NAME).strip.downcase
 
-DB_CONFIG_PATH = File.join(__dir__, 'config/database.yml')
+  def self.development?
+    ENVIRONMENT_NAME == 'development'
+  end
 
-DATABASE_CONFIG = YAML.load_file(DB_CONFIG_PATH)[ENVIRONMENT_NAME]
-if DATABASE_CONFIG.blank?
-  abort "Database configuration for '#{ENVIRONMENT_NAME}' not found in '#{DB_CONFIG_PATH}'"
+  def self.name
+    ENVIRONMENT_NAME
+  end
 end
 
-DISCORD_BOT_TOKEN = ENV['DISCORD_BOT_TOKEN']
-if DISCORD_BOT_TOKEN.blank?
-  abort 'The environment variable DISCORD_BOT_TOKEN is not set'
+module ApplicationConfig
+  def self.discord_bot_token
+    ENV.fetch('DISCORD_BOT_TOKEN') do abort 'The environment variable DISCORD_BOT_TOKEN is not set' end
+  end
+
+  def self.database_config
+    @_database_config ||= load_database_config
+  end
+
+  private
+  
+  def self.load_database_config
+    config_file = File.join(__dir__, 'config/database.yml')
+    config_yaml = YAML.load_file(config_file) rescue (abort "Failed to load or parse '#{config_file}'")
+    config_yaml[Environment.name] or abort "Database configuration for '#{Environment.name}' not found in '#{config_file}'"
+  end
 end
 
 ################################################################
 
 ActiveRecord::Base.logger = Logger.new($stdout)
-ActiveRecord::Base.establish_connection(DATABASE_CONFIG)
+ActiveRecord::Base.establish_connection(ApplicationConfig.database_config)
 
 at_exit do
   ActiveRecord::Base.connection.close
@@ -59,7 +76,7 @@ end
 logger.info 'Red Panda Challenge bot is starting...'
 
 bot = Discordrb::Commands::CommandBot.new(
-  token:    DISCORD_BOT_TOKEN,
+  token:    ApplicationConfig.discord_bot_token,
   intents:  %i(server_messages server_message_reactions),
   prefix:   '!',
 )
