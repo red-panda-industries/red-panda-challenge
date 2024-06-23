@@ -36,13 +36,21 @@ class ApplicationBot
     end
   end
 
+  # Define a command handler method and register it with the bot with logging and error handling
   def register_command!(command_name, handler_method_name)
     logger.debug "Registering command: #{command_name} -> #{handler_method_name}"
 
     bot.command(command_name) do |event|
-      logger.info "#{event.user.name} (#{event.user.id}): #{event.message.content}"
-      __send__(handler_method_name, event)
-      nil # Return nil to prevent the command from echoing the return value
+      begin
+        logger.info "#{COMMAND_PREFIX}#{command_name} - #{event.user.name} (#{event.user.id}): #{event.message.content}"
+
+        __send__(handler_method_name, event)
+      rescue StandardError => error
+        event << 'An error occurred while processing this command.'
+        logger.error(error)
+      ensure
+        return nil # Prevent the command from echoing the return value
+      end
     end
   end
 end
