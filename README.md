@@ -2,7 +2,6 @@
 
 ## Commands
 
-- `Ping!` - displays 'Pong!'
 - `!user` - displays your username and user id
 - `!count` - increments a counter for your user
 - `!michelle` - registers a daily entry for the Michelle Obama challenge
@@ -19,7 +18,7 @@ Then, copy `.env.example` into `.env` and update it with your Discord API creden
 
 ## Running the program
 
-### With Docker (recommended)
+Docker is required.
 
 Build the Red Panda Challenge Docker container:
 ```bash
@@ -41,31 +40,23 @@ docker run --rm -it -v './var':'/app/var' 'red-panda-industries/rpc:latest'
 docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/sh' 'red-panda-industries/rpc:latest' -c 'rake --tasks'
 ```
 
-### Without Docker
+## Application structure
 
-Install Ruby 3.3.1.
-
-Install these packages:
-```
-sudo apt-get install -y build-essential libffi-dev libsqlite3-dev
-```
-
-Install Ruby dependencies:
-```bash
-bundle install
-```
-
-Set up the database:
-```bash
-bundle exec rake db:setup
-```
-
-Run the program:
-```bash
-bundle exec ruby app.rb
-```
-
-Show the Rake tasks:
-```bash
-bundle exec rake --tasks
-```
+- `app/` - Application source code
+- `app/bots/` - Discord bots
+- `app/helpers/` - Presentation helpers
+- `app/models/` - ActiveRecord models
+- `app/red_panda_challenge.rb` - Loads the application
+- `bin/server.rb` - Starts the server
+- `config/` - Configuration files
+- `db/` - ActiveRecord database files
+- `initializers/` - Code that gets run on startup
+- `var/` - Variable content
+- `var/db/` - SQLite database
+- `.env` - Environment file
+- `.env.example` - Example environment file
+- `.ruby-version` - Ruby version file
+- `Dockerfile` - Docker container configuration
+- `Gemfile` - List of Ruby dependencies
+- `Gemfile.lock` - Exact Ruby dependencies (auto-generated)
+- `Rakefile` - project build file
