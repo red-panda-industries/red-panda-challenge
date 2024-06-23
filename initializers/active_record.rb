@@ -4,7 +4,7 @@ require 'sqlite3'
 
 require_relative 'application_config'
 
-ActiveRecord::Base.logger = Logger.new($stdout)
+ActiveRecord::Base.logger = Logger.new($stdout, progname: 'ActiveRecord')
 ActiveRecord::Base.establish_connection(ApplicationConfig.database_config)
 
 at_exit do

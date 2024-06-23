@@ -1,8 +1,8 @@
 class RedPandaChallengeBot < ApplicationBot
   COMMAND_HANDLERS = {
-    :user     => :handle_user_info!,
-    :count    => :handle_count!,
-    :michelle => :handle_michelle!,
+    user:     :handle_user_info!,
+    count:    :handle_count!,
+    michelle: :handle_michelle!,
   }
 
   def handle_user_info!(event)
@@ -35,9 +35,11 @@ class RedPandaChallengeBot < ApplicationBot
 
     event << "You have completed the Michelle Obama challenge #{challenge_entries.size} times."
     event << 'Here are the dates you have completed the challenge:'
+
     challenge_entries.each do |entry|
       event << "- #{entry.date}"
     end
+    
     event << 'Keep up the good work! - Michelle Obama'
   end
 end

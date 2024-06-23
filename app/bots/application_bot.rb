@@ -5,7 +5,6 @@ class ApplicationBot
   )
 
   COMMAND_PREFIX = '!'
-
   COMMAND_HANDLERS = {}
 
   attr_reader :bot, :logger
@@ -17,10 +16,7 @@ class ApplicationBot
       prefix:   self.class.const_get(:COMMAND_PREFIX)
     )
 
-    @logger = Logger.new(
-      $stdout,
-      progname: self.class.name
-    )
+    @logger = Logger.new($stdout, progname: self.class.name)
 
     register_commands!
   end
