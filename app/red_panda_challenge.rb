@@ -3,20 +3,13 @@ require 'discordrb'
 require 'logger'
 require 'pry' # for debugging
 
-# Autoload initializers from the app/initializers directory
-
-Dir[File.join(__dir__, '..', 'initializers', '*.rb')].each do |file|
-  require file
+def autoload_directory(*relative_path_parts)
+  source_files = File.join(__dir__, *relative_path_parts, '**', '*.rb')
+  Dir[source_files].each do |file|
+    require file
+  end
 end
 
-# Autoload models from the app/models directory
-
-Dir[File.join(__dir__, 'models', '*.rb')].each do |file|
-  require file
-end
-
-# Autoload bots from the app/bots directory
-
-Dir[File.join(__dir__, 'bots', '*.rb')].each do |file|
-  require file
-end
+autoload_directory '..', 'initializers'
+autoload_directory 'models'
+autoload_directory 'bots'
