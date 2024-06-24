@@ -1,9 +1,3 @@
-require 'active_record'
-require 'logger'
-require 'sqlite3'
-
-require_relative 'application_config'
-
 ActiveRecord::Base.logger = Logger.new($stdout, progname: 'ActiveRecord')
 ActiveRecord::Base.establish_connection(ApplicationConfig.database_config)
 
