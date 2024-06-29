@@ -1,6 +1,4 @@
 module SoundsHelper
-  attr_reader :voice_bot
-
   def play_wow_ethan_sound!(event)
     play_sound!(event:, file_name: 'wow_ethan.mp3')
   end
@@ -11,7 +9,11 @@ module SoundsHelper
     sound_file = File.join(::Application.sounds_directory, file_name)
 
     voice_bot = event.voice
-    return event << 'You must be in a voice channel to play a sound.' unless voice_bot
+    if voice_bot.nil?
+      event << 'You must be in a voice channel to play a sound.'
+      logger.warn "Tried to play a sound without being in a voice channel: from message #{event.message.content.inspect} invoked by #{event.user.username} (#{event.user.id})"
+      return
+    end
 
     voice_bot.play_file(sound_file)
   end
