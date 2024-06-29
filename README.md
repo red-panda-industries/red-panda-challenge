@@ -25,20 +25,28 @@ Build the Red Panda Challenge Docker container:
 docker buildx build . -t 'red-panda-industries/rpc:latest'
 ```
 
-Set up the database:
+Start a shell inside the container:
 ```bash
-docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/sh' 'red-panda-industries/rpc:latest' -c 'rake db:setup'
+docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/bash' 'red-panda-industries/rpc:latest'
 ```
 
-Run the Red Panda Challenge Docker container:
+Inside the container, set up the database for each environment:
+```bash
+RAILS_ENV=development rake db:setup
+RAILS_ENV=test        rake db:setup
+RAILS_ENV=production  rake db:setup
+```
+
+Run the tests:
+```bash
+rspec
+```
+
+On your host machine, run the Red Panda Challenge Docker container:
 ```bash
 docker run --rm -it -v './var':'/app/var' 'red-panda-industries/rpc:latest'
 ```
 
-(For development) Show the Rake tasks:
-```bash
-docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/sh' 'red-panda-industries/rpc:latest' -c 'rake --tasks'
-```
 
 ## Application structure
 
@@ -46,13 +54,15 @@ docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/sh' 'red-panda-indu
 - `app/bots/` - Discord bots
 - `app/helpers/` - Presentation helpers
 - `app/models/` - ActiveRecord models
-- `app/red_panda_challenge.rb` - Loads the application
 - `bin/server.rb` - Starts the server
 - `config/` - Configuration files
-- `db/` - ActiveRecord database files
-- `initializers/` - Code that gets run on startup
+- `config/application.rb` - Loads the application
+- `config/initializers/` - Code that gets run on startup
+- `db/migrate` - ActiveRecord database migrations
+- `spec/` - Test code
 - `var/` - Variable content
 - `var/db/` - SQLite database
+- `var/log/` - Log files
 - `.env` - Environment file
 - `.env.example` - Example environment file
 - `.ruby-version` - Ruby version file
