@@ -1,0 +1,31 @@
+name: RSpec
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3.1'
+        bundler-cache: true
+
+    - name: Install system dependencies
+      run: sudo apt-get update && sudo apt-get install -y gcc g++ make pkg-config libc-dev libffi-dev libsqlite3-dev libsodium-dev
+
+    - name: Set up database
+      run: RAILS_ENV=test bundle exec rake db:setup
+
+    - name: Run tests
+      run: bundle exec rspec
