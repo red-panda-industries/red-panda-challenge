@@ -1,5 +1,9 @@
 # Red Panda Challenge
 
+[![RSpec workflow](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/rspec.yml/badge.svg)](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/rspec.yml)
+
+[![Docker image workflow](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/docker-image.yml/badge.svg)](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/docker-image.yml)
+
 The Red Panda Challenge is a Discord bot.
 
 It is written in Ruby and runs inside a Docker container.
