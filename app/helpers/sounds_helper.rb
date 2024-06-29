@@ -10,8 +10,8 @@ module SoundsHelper
 
     voice_bot = event.voice
     if voice_bot.nil?
-      event << 'You must be in a voice channel to play a sound.'
-      logger.warn "Tried to play a sound without being in a voice channel: from message #{event.message.content.inspect} invoked by #{event.user.username} (#{event.user.id})"
+      event << "Can't play `#{file_name}`: You must be in a voice channel to play a sound."
+      logger.warn "Tried to play a sound #{file_name.inspect} without being in a voice channel: from message #{event.message.content.inspect} invoked by #{event.user.username} (#{event.user.id})"
       return
     end
 

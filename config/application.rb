@@ -1,4 +1,5 @@
 require 'dotenv/load'
+require 'pathname'
 require 'yaml'
 
 module Application
@@ -26,15 +27,23 @@ module Application
   end
 
   def self.database_config_file
-    File.join(__dir__, '..', 'config', 'database.yml')
+    path.join('config', 'database.yml')
   end
 
   def self.database_migrations_path
-    File.join(__dir__, '..', 'db', 'migrate')
+    path.join('db', 'migrate')
+  end
+
+  def self.db_schema_filename
+    path.join('db', 'schema.rb')
   end
 
   def self.sounds_directory
-    File.join(__dir__, '..', 'app', 'sounds')
+    path.join('sounds')
+  end
+
+  def self.path(*parts)
+    Pathname.new(File.expand_path(File.join(__dir__, '..')))
   end
 
   private

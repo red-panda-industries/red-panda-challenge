@@ -22,15 +22,22 @@ Docker is required.
 
 Build the Red Panda Challenge Docker container:
 ```bash
-docker buildx build . -t 'red-panda-industries/rpc:latest'
+docker buildx build . -t red-panda-industries/rpc:latest
 ```
 
-Start a shell inside the container:
+Start a shell inside the container to set up the database:
 ```bash
-docker run --rm -it -v './var':'/app/var' --entrypoint '/bin/bash' 'red-panda-industries/rpc:latest'
+docker run --rm -it -v ./var:/app/var --entrypoint /bin/bash red-panda-industries/rpc:latest
 ```
 
-Inside the container, set up the database for each environment:
+Run the server (after having set up the database):
+```bash
+docker run --rm -it -v ./var:/app/var red-panda-industries/rpc:latest
+```
+
+### Inside the container
+
+Set up the database for each environment (required):
 ```bash
 RAILS_ENV=development rake db:setup
 RAILS_ENV=test        rake db:setup
@@ -42,11 +49,15 @@ Run the tests:
 rspec
 ```
 
-On your host machine, run the Red Panda Challenge Docker container:
+Show the available tasks:
 ```bash
-docker run --rm -it -v './var':'/app/var' 'red-panda-industries/rpc:latest'
+rake -T
 ```
 
+Start a development console:
+```bash
+rake console
+```
 
 ## Application structure
 
@@ -54,6 +65,7 @@ docker run --rm -it -v './var':'/app/var' 'red-panda-industries/rpc:latest'
 - `app/bots/` - Discord bots
 - `app/helpers/` - Presentation helpers
 - `app/models/` - ActiveRecord models
+- `app/sounds/` - Sound files
 - `bin/server.rb` - Starts the server
 - `config/` - Configuration files
 - `config/application.rb` - Loads the application

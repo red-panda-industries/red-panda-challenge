@@ -44,6 +44,15 @@ namespace :db do
   desc 'Reset the database'
   task :reset => [:drop, :create, :migrate]
 
+  desc 'Dump the database schema'
+  task 'schema:dump' => :load_database_settings do
+    schema_file = File.open(Application.db_schema_filename, 'w')
+    puts "Dumping database schema to '#{schema_file.path}'"
+
+    ActiveRecord::Base.establish_connection(Application.database_config)
+    ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, schema_file)
+  end
+
   task :load_database_settings do
     require 'active_record'
     require_relative 'config/application'
