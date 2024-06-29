@@ -1,11 +1,18 @@
 class RedPandaChallengeBot < ApplicationBot
   include RedPandaChallengeBotHelper
+  include SoundsHelper
   
   COMMAND_HANDLERS = {
     user:     :handle_user_command!,
     count:    :handle_count_command!,
     michelle: :handle_michelle_command!,
   }
+
+  INTENTS = %i(
+    server_messages
+    server_message_reactions
+    voice_states
+  )
 
   def handle_user_command!(event)
     user = User.from_discord_event(event)
@@ -35,5 +42,7 @@ class RedPandaChallengeBot < ApplicationBot
 
     display_michelle_obama_challenge_stats!(user:, event:)
     event << 'Keep up the good work! - Michelle Obama'
+
+    play_wow_ethan_sound!(event)
   end
 end

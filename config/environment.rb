@@ -17,7 +17,7 @@ def require_relative_directory(*relative_path_parts)
 end
 
 # Load the application.
-require_relative 'application_config'
+require_relative 'application'
 require_relative_directory 'initializers'
 require_relative_directory '..', 'app', 'helpers'
 require_relative_directory '..', 'app', 'models'

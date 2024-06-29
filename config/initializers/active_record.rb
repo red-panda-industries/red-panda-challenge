@@ -1,5 +1,5 @@
 ActiveRecord::Base.logger = Logger.new($stdout, progname: 'ActiveRecord')
-ActiveRecord::Base.establish_connection(ApplicationConfig.database_config)
+ActiveRecord::Base.establish_connection(Application.database_config)
 
 at_exit do
   ActiveRecord::Base.connection.close

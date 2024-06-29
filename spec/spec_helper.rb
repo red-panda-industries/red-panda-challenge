@@ -1,6 +1,8 @@
+# Start the code coverage tool.
 require 'simplecov'
 SimpleCov.start
 
+# Load the gem dependencies.
 require 'bundler/setup'
 Bundler.require(:default, :test)
 

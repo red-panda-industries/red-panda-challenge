@@ -1,7 +1,7 @@
 require 'dotenv/load'
 require 'yaml'
 
-module ApplicationConfig
+module Application
   DEFAULT_ENVIRONMENT_NAME = 'development'
   ENVIRONMENT_NAME = ENV.fetch('RAILS_ENV', DEFAULT_ENVIRONMENT_NAME).strip.downcase
 
@@ -31,6 +31,10 @@ module ApplicationConfig
 
   def self.database_migrations_path
     File.join(__dir__, '..', 'db', 'migrate')
+  end
+
+  def self.sounds_directory
+    File.join(__dir__, '..', 'app', 'sounds')
   end
 
   private

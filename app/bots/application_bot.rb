@@ -10,7 +10,7 @@ class ApplicationBot
 
   def initialize
     @bot = Discordrb::Commands::CommandBot.new(
-      token:    ::ApplicationConfig.discord_bot_token,
+      token:    ::Application.discord_bot_token,
       intents:  discord_intents,
       prefix:   command_prefix,
     )

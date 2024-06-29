@@ -1,25 +1,25 @@
 namespace :db do
   desc 'Create the database'
   task :create => :load_database_settings do
-    if File.exist?(ApplicationConfig.database_filename)
-      puts "Database '#{ApplicationConfig.database_filename}' already exists"
+    if File.exist?(Application.database_filename)
+      puts "Database '#{Application.database_filename}' already exists"
       next
     end
 
-    puts "Creating database '#{ApplicationConfig.database_filename}'"
-    database_dirname = File.dirname(ApplicationConfig.database_filename)
+    puts "Creating database '#{Application.database_filename}'"
+    database_dirname = File.dirname(Application.database_filename)
     FileUtils.mkdir_p(database_dirname) unless Dir.exist?(database_dirname)
-    ActiveRecord::Base.establish_connection(ApplicationConfig.database_config)
+    ActiveRecord::Base.establish_connection(Application.database_config)
     ActiveRecord::Base.connection # This will create the SQLite file
   end
 
   desc 'Drop the database'
   task :drop => :load_database_settings do
-    if File.exist?(ApplicationConfig.database_filename)
-      puts "Dropping database '#{ApplicationConfig.database_filename}'"
-      File.delete(ApplicationConfig.database_filename)
+    if File.exist?(Application.database_filename)
+      puts "Dropping database '#{Application.database_filename}'"
+      File.delete(Application.database_filename)
     else
-      puts "Database '#{ApplicationConfig.database_filename}' does not exist"
+      puts "Database '#{Application.database_filename}' does not exist"
     end
   end
 
@@ -34,8 +34,8 @@ namespace :db do
   end
 
   task :load_migrations => :load_database_settings do
-    ActiveRecord::Base.establish_connection(ApplicationConfig.database_config)
-    ActiveRecord::Migrator.migrations_paths = [ApplicationConfig.database_migrations_path]
+    ActiveRecord::Base.establish_connection(Application.database_config)
+    ActiveRecord::Migrator.migrations_paths = [Application.database_migrations_path]
   end
 
   desc 'Create and migrate the database'
@@ -46,7 +46,7 @@ namespace :db do
 
   task :load_database_settings do
     require 'active_record'
-    require_relative 'config/application_config'
+    require_relative 'config/application'
   end
 end
 
