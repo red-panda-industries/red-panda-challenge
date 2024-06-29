@@ -1,3 +1,4 @@
 .env
 var/db/*
+var/log/*
 coverage

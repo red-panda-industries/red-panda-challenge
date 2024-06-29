@@ -1,7 +1,7 @@
-require_relative 'spec_helper'
+require 'spec_helper'
 
-describe 'Hello' do
+RSpec.describe 'Hello' do
   it 'world' do
-    assert_equal 2 + 2, 4
+    expect('world').to eq('world')
   end
 end
