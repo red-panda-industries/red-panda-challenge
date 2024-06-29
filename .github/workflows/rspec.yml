@@ -15,14 +15,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Install system dependencies
+      run: sudo apt-get update && sudo apt-get install libsodium-dev
+
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: '3.3.1'
         bundler-cache: true
-
-    - name: Install system dependencies
-      run: sudo apt-get update && sudo apt-get install -y gcc g++ make pkg-config libc-dev libffi-dev libsqlite3-dev libsodium-dev
 
     - name: Set up database
       run: RAILS_ENV=test bundle exec rake db:setup
