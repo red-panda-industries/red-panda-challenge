@@ -5,11 +5,7 @@ module ApplicationConfig
   def self.environment
     ENVIRONMENT_NAME
   end
-
-  def self.development?
-    environment == 'development'
-  end
-
+  
   def self.discord_bot_token
     ENV.fetch('DISCORD_BOT_TOKEN') do abort 'The environment variable DISCORD_BOT_TOKEN is not set' end
   end

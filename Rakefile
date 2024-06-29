@@ -61,3 +61,11 @@ namespace :db do
   desc 'Reset the database'
   task :reset => [:drop, :create, :migrate]
 end
+
+desc 'Run all of the tests'
+task :test do
+  test_files = File.join(__dir__, 'spec', '**', '*_spec.rb')
+  Dir[test_files].each do |file|
+    system 'bundle', 'exec', 'ruby', file
+  end
+end
