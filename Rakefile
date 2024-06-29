@@ -2,7 +2,7 @@ namespace :db do
   desc 'Create the database'
   task :create => :load_database_settings do
     if File.exist?(Application.database_filename)
-      puts "Database '#{Application.database_filename}' already exists"
+      puts "File '#{Application.database_filename}' already exists, skipping creation"
       next
     end
 
@@ -25,11 +25,17 @@ namespace :db do
 
   desc 'Migrate the database'
   task :migrate => [:load_migrations, :load_database_settings] do
-    ActiveRecord::MigrationContext.new(ActiveRecord::Migrator.migrations_paths).migrate
+    result = ActiveRecord::MigrationContext.new(ActiveRecord::Migrator.migrations_paths).migrate
+    if result.empty?
+      puts "Migrations for #{Application.environment} database are up to date"
+    else
+      puts "Ran #{result.size} migrations in the #{Application.environment} database"
+    end
   end
 
   desc 'Rollback the last migration'
   task :rollback => [:load_migrations, :load_database_settings] do
+    puts "Rolling back the last migration in the #{Application.environment} database"
     ActiveRecord::MigrationContext.new(ActiveRecord::Migrator.migrations_paths).rollback
   end
 
@@ -65,11 +71,11 @@ task :console do
 end
 
 desc 'Run the test suite'
-task :test do
+task :spec do
   exec 'bundle', 'exec', 'rspec'
 end
 
-desc 'Run the application'
-task :run do
+desc 'Start the server'
+task :server do
   exec 'bundle', 'exec', 'ruby', './bin/server.rb'
 end

@@ -6,9 +6,9 @@ at_exit do
 end
 
 unless ActiveRecord::Base.connection.table_exists?('schema_migrations')
-  abort 'The database file does not exist. Run "rake db:setup" to set up the database'
+  fail "The database file does not exist for the #{Application.environment} environment. Run 'RAILS_ENV=#{Application.environment} rake db:setup' to set up the database"
 end
 
 if ActiveRecord::Base.connection.migration_context.needs_migration?
-  abort 'You have database migrations that need to be run. Run "rake db:migrate" to update the database schema.'
+  fail "You have database migrations that need to be run in the #{Application.environment} environment. Run 'RAILS_ENV=#{Application.environment} rake db:migrate' to update the database schema."
 end
