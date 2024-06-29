@@ -1,37 +1,45 @@
 # Red Panda Challenge
 
+The Red Panda Challenge is a Discord bot.
+
+It is written in Ruby and runs inside a Docker container.
+
 ## Commands
 
 - `!user` - displays your username and user id
 - `!count` - increments a counter for your user
-- `!michelle` - registers a daily entry for the Michelle Obama challenge
+- `!michelle` - registers a daily entry for the "Michelle Obama Challenge"
 
 ## Installing the program
+
+### Getting the code
 
 ```bash
 git clone git@github.com:red-panda-industries/red-panda-challenge.git
 cd red-panda-challenge
 ```
 
-## Environment variables
+### Getting a Discord bot token
+
+Go to the [Discord Developer Portal](https://discord.com/developers/applications)
+
+### Setting the environment variables
 
 - `DISCORD_BOT_TOKEN` - Discord bot token
 - `RAILS_ENV` - Rails environment (development, test, production)
 
-Optionally, create an `.env` file to set environment variables.
+Optionally, create an `.env` file to store these variables.
 
 See `.env.example` for an example.
 
-## Running the program
+### Running the program
 
-This program runs inside a Docker container.
-
-Build the Red Panda Challenge Docker container:
+Build the Red Panda Challenge container:
 ```bash
 docker buildx build . -t red-panda-industries/rpc:latest
 ```
 
-Set up the database for the environments you're going to use (required):
+Set up the database for the environments you're going to use:
 ```bash
 docker run --rm -it -v .:/app -e RAILS_ENV=development  red-panda-industries/rpc:latest rake db:setup
 docker run --rm -it -v .:/app -e RAILS_ENV=test         red-panda-industries/rpc:latest rake db:setup
@@ -48,16 +56,13 @@ Run the server:
 docker run --rm -it -v .:/app red-panda-industries/rpc:latest
 ```
 
+Then, to add the bot to your server, follow the invite link printed to the console.
+
 ### Development
 
 Show the available tasks:
 ```bash
-rake -T
-```
-
-Start a development console:
-```bash
-rake console
+docker run --rm -it -v .:/app red-panda-industries/rpc:latest rake -T
 ```
 
 ## Application structure
