@@ -1,8 +1,6 @@
 # Red Panda Challenge
 
-[![RSpec workflow](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/rspec.yml/badge.svg)](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/rspec.yml)
-
-[![Docker image workflow](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/docker-image.yml/badge.svg)](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/docker-image.yml)
+[![RSpec workflow](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/rspec.yml/badge.svg)](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/rspec.yml) [![Docker image workflow](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/docker-image.yml/badge.svg)](https://github.com/red-panda-industries/red-panda-challenge/actions/workflows/docker-image.yml)
 
 The Red Panda Challenge is a Discord bot.
 
@@ -66,27 +64,33 @@ Then, to add the bot to your server, follow the invite link printed to the conso
 
 Show the available tasks:
 ```bash
-docker run --rm -it -v .:/app red-panda-industries/rpc:latest rake -T
+docker run --rm -it -v .:/app red-panda-industries/rpc:latest rake --tasks
 ```
 
 ## Application structure
 
+- `.github/workflows/` - GitHub Actions configuration
 - `app/` - Application source code
-- `app/bots/` - Discord bots
-- `app/helpers/` - Presentation helpers
-- `app/models/` - ActiveRecord models
-- `app/sounds/` - Sound files
+  - `app/bots/` - Discord bots
+  - `app/helpers/` - Presentation helpers
+  - `app/models/` - ActiveRecord models
+  - `app/sounds/` - Sound files
 - `bin/server.rb` - Starts the server
 - `config/` - Configuration files
-- `config/environment.rb` - Loads the application
-- `config/initializers/` - Code that gets run on startup
+  - `config/initializers/` - Code that gets run on startup
+  - `config/application.rb` - Application configuration
+  - `config/console.rb` - Console configuration
+  - `config/database.yml` - Database configuration
+  - `config/environment.rb` - Entry point for the application
 - `db/` - Database code
-- `db/migrate` - ActiveRecord database migrations
-- `db/schema.rb` - Database schema (auto-generated)
+  - `db/migrate` - ActiveRecord database migrations
+  - `db/schema.rb` - Database schema (auto-generated)
 - `spec/` - Test code
+  - `spec/factories.rb` - FactoryBot factories
+  - `spec/spec_helper.rb` - Test configuration
 - `var/` - Variable content to be persisted
-- `var/db/` - SQLite database
-- `var/log/` - Log files
+  - `var/db/` - SQLite database
+  - `var/log/` - Log files
 - `.env` - Environment file
 - `.env.example` - Example environment file
 - `.ruby-version` - Ruby version file
