@@ -40,11 +40,11 @@ class RedPandaChallengeBot
   end
 
   def run_action!(controller_name:, method_name:, event:)
-    logger.info "Message: \e[1m\e[32m#{event.message.content.inspect}\e[0m"
+    logger.info "\e[1m\e[32mCommand #{event.message.content.inspect}\e[0m"
     logger.info "↳ User: #{event.user.name.inspect} (#{event.user.id})"
     logger.info "↳ Server: #{event.server.name.inspect} (#{event.server.id})"
     logger.info "↳ Channel: #{event.channel.name.inspect} (#{event.channel.id})"
-    logger.info "↳ Handler: #{controller_name}##{method_name}"
+    logger.info "↳ Action: #{controller_name}##{method_name}"
 
     begin
       controller = Object.const_get(controller_name).new(event:, bot:)

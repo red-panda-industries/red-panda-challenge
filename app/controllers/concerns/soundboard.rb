@@ -6,23 +6,26 @@ module Soundboard
   private
 
   def play_sound!(file_name)
-    logger.info "Attempting to play sound: #{file_name.inspect}"
+    logger.info "Attempting to play sound #{file_name.inspect}"
 
-    connect_to_voice_channel! or return
+    voice_channel = connect_to_voice_channel!
+    return unless voice_channel
+
     flush_message_buffer!
 
     sound_path = File.join(::Application.sounds_directory, file_name).to_s
 
     event.voice.play_file(sound_path)
-    logger.info "Played sound: #{sound_path.inspect}"
+    logger.info "\e[1m\e[32mPlayed sound #{sound_path.inspect} in voice channel #{voice_channel.name.inspect}\e[0m"
   end
 
   def connect_to_voice_channel!
     channel = event.user.voice_channel
 
     if channel
-      logger.debug "↳ Found voice channel: #{channel.name.inspect}"
+      logger.debug "Found voice channel #{channel.name.inspect}"
       bot.voice_connect(channel)
+      logger.debug "\e[1m\e[32mConnected to voice channel #{channel.name.inspect}\e[0m"
     else
       logger.warn 'User is not in a voice channel'
     end

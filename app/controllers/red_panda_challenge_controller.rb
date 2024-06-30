@@ -16,14 +16,17 @@ class RedPandaChallengeController < ApplicationController
     user.save!
 
     event << "You have used this command #{user.count} times now."
+    logger.info "Incremented count to #{user.count}"
   end
 
   def michelle_obama_challenge
     if user.has_completed_michelle_obama_challenge_today?
       event << 'You have already completed the Michelle Obama challenge today.'
+      logger.debug "\e[1m\e[32mAlready completed the Michelle Obama challenge today\e[0m"
     else
       user.complete_michelle_obama_challenge_for_today!
       event << 'You have completed the Michelle Obama challenge for today!'
+      logger.info "\e[1m\e[32mCompleted the Michelle Obama challenge for today\e[0m"
     end
 
     show_michelle_obama_challenge_stats!
