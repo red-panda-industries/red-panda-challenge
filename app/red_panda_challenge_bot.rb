@@ -16,7 +16,9 @@ class RedPandaChallengeBot
 
   def run!
     logger.info 'Starting...'
-    logger.info "Started: This bot's invite URL is #{bot.invite_url}"
+    invite_url = bot.invite_url
+    logger.info 'Started.'
+    logger.info "\e[1m\e[32mThis bot's invite URL is \033[4m#{bot.invite_url}\e[0m"
     bot.run
   end
 
@@ -38,11 +40,11 @@ class RedPandaChallengeBot
   end
 
   def run_action!(controller_name:, method_name:, event:)
-    logger.info "Message: #{event.message.content.inspect}"
-    logger.info "↳ Handler: #{controller_name}##{method_name}"
+    logger.info "Message: \e[1m\e[32m#{event.message.content.inspect}\e[0m"
     logger.info "↳ User: #{event.user.name.inspect} (#{event.user.id})"
     logger.info "↳ Server: #{event.server.name.inspect} (#{event.server.id})"
     logger.info "↳ Channel: #{event.channel.name.inspect} (#{event.channel.id})"
+    logger.info "↳ Handler: #{controller_name}##{method_name}"
 
     begin
       controller = Object.const_get(controller_name).new(event:, bot:)

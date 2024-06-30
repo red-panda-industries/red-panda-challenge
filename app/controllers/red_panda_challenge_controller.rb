@@ -1,6 +1,6 @@
 class RedPandaChallengeController < ApplicationController
   include RedPandaChallengeHelper
-  include PlaySounds
+  include Soundboard
 
   def show_user_info
     event << "Your username is #{user.username}."
@@ -26,7 +26,7 @@ class RedPandaChallengeController < ApplicationController
       event << 'You have completed the Michelle Obama challenge for today!'
     end
 
-    display_michelle_obama_challenge_stats!(user:, event:)
+    show_michelle_obama_challenge_stats!
     event << 'Keep up the good work! - Michelle Obama'
 
     play_wow_ethan_sound!

@@ -1,8 +1,11 @@
 module RedPandaChallengeHelper
-  def display_michelle_obama_challenge_stats!(user:, event:)
+  def show_michelle_obama_challenge_stats!
     challenge_entries = user.michelle_obama_challenge_entries
+    streak = calculate_current_michelle_obama_challenge_streak
 
     event << "You have completed the Michelle Obama challenge #{challenge_entries.size} times."
+    event << "Your current streak is #{streak} #{'days'.pluralize(streak)}."
+    event << ""
     event << 'This week:'
 
     date_range = (Date.today - 7) .. (Date.today)
@@ -17,5 +20,15 @@ module RedPandaChallengeHelper
         event << "- #{formatted_date}"
       end
     end
+  end
+
+  def calculate_current_michelle_obama_challenge_streak
+    streak = 0
+    challenge_entries = user.michelle_obama_challenge_entries
+    challenge_entries.reverse_each.with_index do |entry, index|
+      streak += 1
+      break unless entry.date == Date.today - index
+    end
+    streak
   end
 end
