@@ -1,5 +1,5 @@
 class RedPandaChallengeController < ApplicationController
-  include RedPandaChallengeHelper
+  include RedPandaChallengeView
   include Soundboard
 
   def show_user_info
@@ -31,12 +31,14 @@ class RedPandaChallengeController < ApplicationController
       event << '**You just completed the Michelle Obama challenge for today!**'
       logger.info "\e[1m\e[32mCompleted the Michelle Obama challenge for today\e[0m"
     end
-
     event << ''
-    show_michelle_stats!
 
+    show_overall_michelle_stats!(event:, user:)
+    show_weekly_michelle_stats!(event:, user:)
     event << ''
-    event << '> *Keep up the good work!* - Michelle Obama'
+
+    event << '> *Keep up the good work!*'
+    event << '> - Michelle Obama'
 
     play_wow_ethan_sound!
   end

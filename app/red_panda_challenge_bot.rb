@@ -40,18 +40,17 @@ class RedPandaChallengeBot
   end
 
   def run_action!(controller_name:, method_name:, event:)
-    logger.info "\e[1m\e[32mCommand #{event.message.content.inspect}\e[0m"
-    logger.info "↳ User: #{event.user.name.inspect} (#{event.user.id})"
-    logger.info "↳ Server: #{event.server.name.inspect} (#{event.server.id})"
-    logger.info "↳ Channel: #{event.channel.name.inspect} (#{event.channel.id})"
-    logger.info "↳ Action: #{controller_name}##{method_name}"
+    event_data = { user: event.user.name, user_id: event.user.id, server: event.server.name, server_id: event.server.id, channel: event.channel.name, channel_id: event.channel.id }
 
+    logger.info "\e[1m\e[32mReceived command #{event.message.content.inspect}\e[0m #{event_data.inspect}"
     begin
       controller = Object.const_get(controller_name).new(event:, bot:)
       controller.__send__(method_name)
 
+      logger.debug "\e[1m\e[32mCommand #{event.message.content.inspect} processed successfully\e[0m #{event_data.inspect}"
     rescue StandardError => error
       event << 'An error occurred while processing this command.'
+      logger.error("\e[1m\e[31mCommand #{event.message.content.inspect} failed\e[0m #{event_data.inspect}")
       logger.error(error)
     end
   end

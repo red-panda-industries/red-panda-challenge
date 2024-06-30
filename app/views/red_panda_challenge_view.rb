@@ -1,5 +1,7 @@
-module RedPandaChallengeHelper
-  def show_michelle_stats!
+module RedPandaChallengeView
+  include ApplicationHelper
+
+  def show_overall_michelle_stats!(event:, user:)
     challenge_entries = user.cached_michelle_obama_challenge_entries
     current_streak = user.current_michelle_obama_challenge_streak
     longest_streak = user.longest_michelle_obama_challenge_streak
@@ -12,11 +14,9 @@ module RedPandaChallengeHelper
     else
       event << "Your longest streak was #{longest_streak.length} #{'days'.pluralize(longest_streak.length)} and lasted from #{format_date(longest_streak.first.date)} to #{format_date(longest_streak.last.date)}."
     end
-
-    show_weekly_michelle_stats!
   end
 
-  def show_weekly_michelle_stats!
+  def show_weekly_michelle_stats!(event:, user:)
     challenge_entries = user.cached_michelle_obama_challenge_entries
     completed_dates = challenge_entries.map(&:date).to_set
 
@@ -30,9 +30,5 @@ module RedPandaChallengeHelper
         event << "- #{format_date(date)}"
       end
     end
-  end
-
-  def format_date(date)
-    date.strftime('%m-%d %a')
   end
 end
