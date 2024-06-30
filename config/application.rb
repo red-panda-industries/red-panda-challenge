@@ -39,7 +39,7 @@ module Application
   end
 
   def self.sounds_directory
-    path.join('sounds')
+    path.join('app', 'sounds')
   end
 
   def self.path(*parts)

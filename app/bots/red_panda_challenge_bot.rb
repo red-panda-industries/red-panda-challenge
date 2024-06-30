@@ -1,18 +1,12 @@
 class RedPandaChallengeBot < ApplicationBot
   include RedPandaChallengeBotHelper
-  include SoundsHelper
+  include SoundsConcern
   
-  COMMAND_HANDLERS = {
+  @@command_handlers = {
     user:     :handle_user_command!,
     count:    :handle_count_command!,
     michelle: :handle_michelle_command!,
   }
-
-  INTENTS = %i(
-    server_messages
-    server_message_reactions
-    voice_states
-  )
 
   def handle_user_command!(event)
     user = User.from_discord_event(event)

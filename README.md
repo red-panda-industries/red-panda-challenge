@@ -85,7 +85,7 @@ docker run --rm -it -v .:/app red-panda-industries/rpc:latest rake --tasks
 - `db/` - Database code
   - `db/migrate` - ActiveRecord database migrations
   - `db/schema.rb` - Database schema (auto-generated)
-- `spec/` - Test code
+- `spec/` - RSpec tests
   - `spec/factories.rb` - FactoryBot factories
   - `spec/spec_helper.rb` - Test configuration
 - `var/` - Variable content to be persisted
