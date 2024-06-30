@@ -31,7 +31,7 @@ module Soundboard
       bot.voice_connect(channel)
       logger.debug "\e[1m\e[32mConnected to voice channel #{channel.name.inspect}\e[0m"
     else
-      logger.warn 'User is not in a voice channel'
+      logger.warn 'Couldn\'t play sound because user is not in a voice channel'
     end
 
     channel
