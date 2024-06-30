@@ -1,21 +1,25 @@
 module Soundboard
   def play_wow_ethan_sound!
-    play_sound!('wow_ethan.mp3')
+    play_sound!('wow_ethan.opus')
   end
 
   private
 
   def play_sound!(file_name)
-    logger.info "Attempting to play sound #{file_name.inspect}"
+    sound_path = File.join(::Application.sounds_directory, file_name).to_s
+    logger.info "Attempting to play sound #{sound_path.inspect}"
 
     voice_channel = connect_to_voice_channel!
     return unless voice_channel
 
     flush_message_buffer!
 
-    sound_path = File.join(::Application.sounds_directory, file_name).to_s
+    if file_name.end_with?('.dca')
+      event.voice.play_dca(sound_path)
+    else
+      event.voice.play_file(sound_path)
+    end
 
-    event.voice.play_file(sound_path)
     logger.info "\e[1m\e[32mPlayed sound #{sound_path.inspect} in voice channel #{voice_channel.name.inspect}\e[0m"
   end
 
