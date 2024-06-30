@@ -1,4 +1,4 @@
-module RedPandaChallengeBotHelper
+module RedPandaChallengeHelper
   def display_michelle_obama_challenge_stats!(user:, event:)
     challenge_entries = user.michelle_obama_challenge_entries
 

@@ -1,13 +1,13 @@
-module SoundsConcern
-  def play_wow_ethan_sound!(event)
-    play_sound!(event:, file_name: 'wow_ethan.mp3')
+module PlaySounds
+  def play_wow_ethan_sound!
+    play_sound!('wow_ethan.mp3')
   end
 
   private
 
-  def play_sound!(event:, file_name:)
+  def play_sound!(file_name)
     sound_file = File.join(::Application.sounds_directory, file_name).to_s
-    logger.info "Playing sound: #{sound_file.inspect}"
+    logger.info "Attempting to play sound: #{sound_file.inspect}"
 
     channel = event.user.voice_channel
 

@@ -18,7 +18,9 @@ end
 
 # Load the application.
 require_relative 'application'
+require_relative 'commands'
 require_relative_directory 'initializers'
 require_relative_directory '..', 'app', 'helpers'
 require_relative_directory '..', 'app', 'models'
-require_relative_directory '..', 'app', 'bots'
+require_relative_directory '..', 'app', 'controllers'
+require_relative '../app/red_panda_challenge_bot'
