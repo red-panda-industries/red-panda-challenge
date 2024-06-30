@@ -1,4 +1,8 @@
+require 'timeout'
+
 module Soundboard
+  VOICE_CHANNEL_TIMEOUT_SECONDS = 5
+
   def play_wow_ethan_sound!
     play_sound!('wow_ethan.opus')
   end
@@ -9,10 +13,10 @@ module Soundboard
     sound_path = File.join(::Application.sounds_directory, file_name).to_s
     logger.info "Attempting to play sound #{sound_path.inspect}"
 
+    flush_message_buffer!
+
     voice_channel = connect_to_voice_channel!
     return unless voice_channel
-
-    flush_message_buffer!
 
     if file_name.end_with?('.dca')
       event.voice.play_dca(sound_path)
@@ -23,17 +27,28 @@ module Soundboard
     logger.info "\e[1m\e[32mPlayed sound #{sound_path.inspect} in voice channel #{voice_channel.name.inspect}\e[0m"
   end
 
+  # returns the voice channel the bot is connected to,
+  # or nil if the user is not in a voice channel,
+  # or nil if the bot times out while connecting
   def connect_to_voice_channel!
     channel = event.user.voice_channel
 
-    if channel
-      logger.debug "Found voice channel #{channel.name.inspect}"
-      bot.voice_connect(channel)
-      logger.debug "\e[1m\e[32mConnected to voice channel #{channel.name.inspect}\e[0m"
-    else
-      logger.warn 'Couldn\'t play sound because user is not in a voice channel'
+    if channel.nil?
+      logger.warn "User #{event.user.name.inspect} (#{event.user.id}) is not in a voice channel"
+      return nil
     end
 
+    logger.debug "Found voice channel #{channel.name.inspect}"
+    begin
+      Timeout::timeout(VOICE_CHANNEL_TIMEOUT_SECONDS) do
+        bot.voice_connect(channel)
+      end
+      logger.debug "\e[1;32mConnected to voice channel #{channel.name.inspect}\e[0m"
+    rescue Timeout::Error
+      logger.warn "\e[1;33mTimed out while connecting to voice channel #{channel.name.inspect}\e[0m"
+      return nil
+    end
+    
     channel
   end
 
