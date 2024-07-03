@@ -24,6 +24,8 @@ module Soundboard
       event.voice.play_file(sound_path)
     end
 
+    leave_voice_channel!
+
     logger.info "\e[1m\e[32mPlayed sound #{sound_path.inspect} in voice channel #{voice_channel.name.inspect}\e[0m"
   end
 
@@ -50,6 +52,11 @@ module Soundboard
     end
     
     channel
+  end
+
+  def leave_voice_channel!
+    bot.voice_destroy(event.server.id)
+    logger.debug "\e[1;32mLeft voice channel #{event.user.voice_channel.name.inspect}\e[0m"
   end
 
   def flush_message_buffer!
