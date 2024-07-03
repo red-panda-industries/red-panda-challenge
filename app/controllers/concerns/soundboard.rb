@@ -3,11 +3,20 @@ require 'timeout'
 module Soundboard
   VOICE_CHANNEL_TIMEOUT_SECONDS = 5
 
+  # Mutexes to synchronize playing sounds on a per-server basis
+  @@server_mutexes = {}
+
   def play_wow_ethan_sound!
-    play_sound!('wow_ethan.opus')
+    play_sound_synchronized!('wow_ethan.opus')
   end
 
   private
+
+  def play_sound_synchronized!(file_name)
+    server_mutex.synchronize do
+      play_sound!(file_name)
+    end
+  end
 
   def play_sound!(file_name)
     sound_path = File.join(::Application.sounds_directory, file_name).to_s
@@ -64,5 +73,9 @@ module Soundboard
     logger.debug "Flushed message buffer: #{buffer.inspect}"
     event.send_message(buffer) unless buffer.empty?
     nil
+  end
+
+  def server_mutex
+    @@server_mutexes[event.server.id] ||= Mutex.new
   end
 end
